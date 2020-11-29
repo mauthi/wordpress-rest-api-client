@@ -2,22 +2,21 @@
 
 namespace Vnn\WpApiClient\Auth;
 
-use Psr\Http\Message\RequestInterface;
-use Vnn\WpApiClient\WpClient;
-use InvalidArgumentException;
 use Illuminate\Support\Facades\Cache;
+use InvalidArgumentException;
+use Psr\Http\Message\RequestInterface;
+use Vnn\WpApiClient\Auth\AbstractAuth;
+use Vnn\WpApiClient\WpClient;
 
 /**
  * Class WpJWTAuth
  * @package Vnn\WpApiClient\Auth
  */
-class WpJWTAuth implements AuthInterface
+class WpJWTAuth extends AbstractAuth implements AuthInterface
 {
     const ACCESS_TOKEN_KEY = 'wp_access_token';
     const REFRESH_TOKEN_KEY = 'wp_refresh_token';
 
-    private WpClient $client;
-    
     /**
      * {@inheritdoc}
      */
@@ -27,13 +26,6 @@ class WpJWTAuth implements AuthInterface
             'Authorization',
             'Bearer ' . $this->getToken(),
         );
-    }
-
-    public function setClient(WpClient $client) : WpJWTAuth
-    {
-        $this->client = $client;
-
-        return $this;
     }
 
     private function getToken() : string
@@ -46,7 +38,6 @@ class WpJWTAuth implements AuthInterface
         // if token is not in cache: try to refresh
         return $this->refresh();
     }
-
 
     private function refresh() : string
     {

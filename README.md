@@ -39,7 +39,6 @@ use Vnn\WpApiClient\WpClient;
 require 'vendor/autoload.php';
 
 $client = new WpClient();
-$client->setCredentials((new WpJWTAuth())->setClient($client));
 
 $user = $client->users()->get(2);
 

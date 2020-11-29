@@ -7,6 +7,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Vnn\WpApiClient\Auth\AuthInterface;
+use Vnn\WpApiClient\Auth\WpJWTAuth;
 use Vnn\WpApiClient\Endpoint;
 use Vnn\WpApiClient\Endpoint\CustomPosts;
 use Vnn\WpApiClient\Http\ClientInterface;
@@ -61,6 +62,9 @@ class WpClient
 
         $this->httpClient = new GuzzleAdapter();
         $this->wordpressUrl = $wordpressUrl;
+
+        $authClass = config("wordpress.authClass");
+        $this->setCredentials((new $authClass())->setClient($this));
     }
 
     /**

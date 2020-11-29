@@ -1,5 +1,7 @@
 <?php
 
+use Vnn\WpApiClient\Auth\WpJWTAuth;
+
 return [
 
     /*
@@ -46,5 +48,16 @@ return [
     */
 
     'customPostTypes' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auth class
+    |--------------------------------------------------------------------------
+    |
+    | Which class should be used for authentication (either WpJWTAuth::class or
+    | your custom implementation)
+    |
+    */
+    'authClass' => WpJWTAuth::class,
 
 ];
