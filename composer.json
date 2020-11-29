@@ -14,8 +14,8 @@
   "extra": {
       "laravel": {
           "providers": [
-              "Vnn\\WpApiClient\\AppServiceProvider",
+              "Vnn\\WpApiClient\\AppServiceProvider"
           ]
       }
-  },
+  }
 }
