@@ -10,5 +10,12 @@
     "laravel/framework": "^8.0",
     "psr/http-message": "^1.0",
     "guzzlehttp/guzzle": "^7.0.1"
-  }
+  },
+  "extra": {
+      "laravel": {
+          "providers": [
+              "Vnn\\WpApiClient\\AppServiceProvider",
+          ]
+      }
+  },
 }
