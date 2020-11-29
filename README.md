@@ -39,7 +39,7 @@ use Vnn\WpApiClient\WpClient;
 require 'vendor/autoload.php';
 
 $client = new WpClient();
-$client->setCredentials(new WpBasicAuth('user', 'securepassword'));
+$client->setCredentials((new WpJWTAuth())->setClient($client));
 
 $user = $client->users()->get(2);
 
@@ -47,7 +47,4 @@ print_r($user);
 ```
 
 ## Testing
-```bash
-composer install
-vendor/bin/peridot
-```
+[wip]

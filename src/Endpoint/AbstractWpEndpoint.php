@@ -68,8 +68,11 @@ abstract class AbstractWpEndpoint
             unset($data['id']);
         }
 
-        $request = new Request('POST', $url, ['Content-Type' => 'application/json'], json_encode($data));
-        dd($data);
+        $json = json_encode($data);
+        $request = new Request('POST', $url, [
+            'Content-Type' => 'application/json'
+        ], $json);
+
         $response = $this->client->send($request, $this->withCredentials);
         if ($response->hasHeader('Content-Type')
             && substr($response->getHeader('Content-Type')[0], 0, 16) === 'application/json') {

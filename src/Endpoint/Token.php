@@ -24,6 +24,6 @@ class Token extends AbstractWpEndpoint
      */
     protected function getEndpoint()
     {
-        return '/wp-json/wp/v2/token';
+        return 'token';
     }
 }

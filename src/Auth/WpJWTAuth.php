@@ -25,21 +25,20 @@ class WpJWTAuth implements AuthInterface
     {
         return $request->withHeader(
             'Authorization',
-            'Bearer ' . $this->getToken()
+            'Bearer ' . $this->getToken(),
         );
     }
 
-    public function setClient(WpClient $client) : WpJWTAuth 
+    public function setClient(WpClient $client) : WpJWTAuth
     {
         $this->client = $client;
 
         return $this;
     }
 
-
     private function getToken() : string
     {
-        // if token is in cache: return 
+        // if token is in cache: return
         if (Cache::has(self::ACCESS_TOKEN_KEY)) {
             return Cache::get(self::ACCESS_TOKEN_KEY);
         }
@@ -49,18 +48,22 @@ class WpJWTAuth implements AuthInterface
     }
 
 
-    private function refresh() : string 
+    private function refresh() : string
     {
-        if (Cache::has(self::REFRESH_TOKEN_KEY)) { 
+        if (Cache::has(self::REFRESH_TOKEN_KEY)) {
             return $this->refreshRequest(Cache::get(self::REFRESH_TOKEN_KEY));
         }
 
         return $this->authenticate();
     }
 
-    private function refreshRequest(string $refreshToken) : string 
+    private function refreshRequest(string $refreshToken) : string
     {
-        return "xx";
+        $response = $this->client->token()->save([
+            'refresh_token' => Cache::get(self::REFRESH_TOKEN_KEY),
+        ]);
+
+        return $this->getTokenFromResponse($response);
     }
 
     private function authenticate(): string
@@ -69,15 +72,24 @@ class WpJWTAuth implements AuthInterface
 
         $response = $this->client->token()->save([
             'api_key' => env('WP_REST_API_KEY'),
-            'api_secrect' => env('WP_REST_API_SECRET'),
+            'api_secret' => env('WP_REST_API_SECRET'),
         ]);
 
-        return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvaHAyMDE5Lm5ldHdlcmtlci5hdCIsImlhdCI6MTYwNjY1MjE0NCwibmJmIjoxNjA2NjUyMTQ0LCJleHAiOjE2MDcyNTY5NDQsImRhdGEiOnsidXNlciI6eyJpZCI6MywidHlwZSI6IndwX3VzZXIiLCJ1c2VyX2xvZ2luIjoibWljaGFlbC5tYXV0aG5lciIsInVzZXJfZW1haWwiOiJtaWNoYWVsLm1hdXRobmVyQG5ldHdlcmtlci5hdCIsImFwaV9rZXkiOiIzd1Q0S0REY0FqakoyZWFjNnBsZlk0RlZNIn19fQ.1LWVUrzN1jJWDul6cGDSGQk4vO_ZeoDUOmibuSPoBpI";
+        return $this->getTokenFromResponse($response);
     }
 
-    private function checkIfCredentialsAreSet() {
+    private function checkIfCredentialsAreSet() 
+    {
         if (!env("WP_REST_API_KEY") || !env('WP_REST_API_SECRET')) {
             throw new InvalidArgumentException('You need to set both WP_REST_API_KEY and WP_REST_API_SECRET in env');
         }
+    }
+
+    private function getTokenFromResponse(array $response) : string
+    {
+        Cache::put(self::ACCESS_TOKEN_KEY, $response['access_token'], $response['exp']);
+        Cache::put(self::REFRESH_TOKEN_KEY, $response['refresh_token']);
+
+        return $response['access_token'];
     }
 }
