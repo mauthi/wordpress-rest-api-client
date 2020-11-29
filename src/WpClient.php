@@ -2,12 +2,13 @@
 
 namespace Vnn\WpApiClient;
 
+use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
-use InvalidArgumentException;
 use Vnn\WpApiClient\Auth\AuthInterface;
 use Vnn\WpApiClient\Endpoint;
+use Vnn\WpApiClient\Endpoint\CustomPosts;
 use Vnn\WpApiClient\Http\ClientInterface;
 use Vnn\WpApiClient\Http\GuzzleAdapter;
 
@@ -52,10 +53,10 @@ class WpClient
      */
     public function __construct()
     {
-        $wordpressUrl = env("WP_REST_API_URL");
+        $wordpressUrl = config('wordpress.url');
 
         if (!$wordpressUrl) {
-            throw new InvalidArgumentException('You need to set WP_REST_API_URL in env');
+            throw new InvalidArgumentException('You need to set WP_REST_API_URL in config');
         }
 
         $this->httpClient = new GuzzleAdapter();
@@ -89,6 +90,10 @@ class WpClient
             $class = 'Vnn\WpApiClient\Endpoint\\' . ucfirst($endpoint);
             if (class_exists($class)) {
                 $this->endPoints[$endpoint] = new $class($this);
+            } elseif (in_array($endpoint, config('wordpress.customPostTypes'))) {
+                $class = new CustomPosts($this);
+                $class->setSlug($endpoint);
+                $this->endPoints[$endpoint] = $class;
             } else {
                 throw new RuntimeException('Endpoint "' . $endpoint . '" does not exist"');
             }

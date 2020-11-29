@@ -43,7 +43,6 @@ class GuzzleAdapter implements ClientInterface
      */
     public function send(RequestInterface $request)
     {
-        $debug = env("WP_REST_API_DEBUG", false);
-        return $this->guzzle->send($request, ['debug' => config('wordpressRestApi.debug')]);
+        return $this->guzzle->send($request, ['debug' => config('wordpress.debug')]);
     }
 }

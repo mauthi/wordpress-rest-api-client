@@ -71,8 +71,8 @@ class WpJWTAuth implements AuthInterface
         $this->checkIfCredentialsAreSet();
 
         $response = $this->client->token()->save([
-            'api_key' => env('WP_REST_API_KEY'),
-            'api_secret' => env('WP_REST_API_SECRET'),
+            'api_key' => config('wordpress.key'),
+            'api_secret' => config('wordpress.secret'),
         ]);
 
         return $this->getTokenFromResponse($response);
@@ -80,7 +80,7 @@ class WpJWTAuth implements AuthInterface
 
     private function checkIfCredentialsAreSet()
     {
-        if (!env("WP_REST_API_KEY") || !env('WP_REST_API_SECRET')) {
+        if (!config('wordpress.key') || !config('wordpress.secret')) {
             throw new InvalidArgumentException('You need to set both WP_REST_API_KEY and WP_REST_API_SECRET in env');
         }
     }
