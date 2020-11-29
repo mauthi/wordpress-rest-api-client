@@ -106,11 +106,7 @@ class WpClient
         return $this->endPoints[$endpoint];
     }
 
-    /**
-     * @param RequestInterface $request
-     * @return ResponseInterface
-     */
-    public function send(RequestInterface $request, bool $withCredentials = true)
+    public function send(RequestInterface $request, bool $withCredentials = true) : ResponseInterface
     {
         if ($this->credentials && true === $withCredentials) {
             $request = $this->credentials->addCredentials($request);

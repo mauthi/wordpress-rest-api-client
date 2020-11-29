@@ -3,6 +3,7 @@
 namespace Vnn\WpApiClient\Endpoint;
 
 use GuzzleHttp\Psr7\Request;
+use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Vnn\WpApiClient\WpClient;
 
@@ -19,6 +20,8 @@ abstract class AbstractWpEndpoint
 
     protected bool $withCredentials = true;
 
+    protected ?int $pages;
+
     /**
      * Users constructor.
      * @param WpClient $client
@@ -34,10 +37,8 @@ abstract class AbstractWpEndpoint
      * @param int $id
      * @param array $params - parameters that can be passed to GET
      *        e.g. for tags: https://developer.wordpress.org/rest-api/reference/tags/#arguments
-     * @return array
-     * @throws \RuntimeException
      */
-    public function get($id = null, array $params = null)
+    public function get(?int $id = null, array $params = null) : array
     {
         $uri = $this->getEndpoint();
         $uri .= (is_null($id) ? '' : '/' . $id);
@@ -46,12 +47,30 @@ abstract class AbstractWpEndpoint
         $request = new Request('GET', $uri);
         $response = $this->client->send($request);
 
-        if ($response->hasHeader('Content-Type')
-            && substr($response->getHeader('Content-Type')[0], 0, 16) === 'application/json') {
-            return json_decode($response->getBody()->getContents(), true);
+        return $this->getResponse($response, $id);
+    }
+
+    public function getAll(array $params = []) : array {
+        $result = [];
+
+        if (isset($params['page'])) {
+            throw new RuntimeException('You are not allowed to set page for getAll requests');
+        }
+        $params['page'] = 1;
+
+        if (!isset($params['per_page'])) {
+            $params['per_page'] = 100;
         }
 
-        throw new RuntimeException('Unexpected response');
+        $data = $this->get(null, $params);
+        if (is_int($this->pages) && $this->pages > 1) {
+            do {
+                $params['page']++;
+                array_push($data, $this->get(null, $params));
+            } while ($params['page'] < $this->pages);
+        }
+
+        return $data;
     }
 
     /**
@@ -62,8 +81,10 @@ abstract class AbstractWpEndpoint
     public function save(array $data)
     {
         $url = $this->getEndpoint();
-        
+        $id = null;
+
         if (isset($data['id'])) {
+            $id = $id;
             $url .= '/' . $data['id'];
             unset($data['id']);
         }
@@ -74,11 +95,38 @@ abstract class AbstractWpEndpoint
         ], $json);
 
         $response = $this->client->send($request, $this->withCredentials);
-        if ($response->hasHeader('Content-Type')
-            && substr($response->getHeader('Content-Type')[0], 0, 16) === 'application/json') {
-            return json_decode($response->getBody()->getContents(), true);
+        return $this->getResponse($response, $id);
+    }
+
+    public function updateOrCreate(?int $id, array $data) : array
+    {
+        if (null !== $id) {
+            $data['id'] = $id;
         }
 
-        throw new RuntimeException('Unexpected response');
+        return $this->save($data);
+    }
+
+    /**
+     * @throws \RuntimeException
+     */
+    private function getResponse(ResponseInterface $response, ?int $id) : array {
+         if (!$response->hasHeader('Content-Type')
+            || substr($response->getHeader('Content-Type')[0], 0, 16) !== 'application/json') {
+            throw new RuntimeException('Unexpected response');
+        }
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        if (null !== $id && $id !== $data['id']) {
+            throw new RuntimeException('ID not in response or wrong');
+        }
+
+        $this->pages = null;
+        if ($response->hasHeader('X-WP-TotalPages')) {
+            $this->pages = $response->getHeader('X-WP-TotalPages')[0];
+        }
+
+        return $data;
     }
 }
