@@ -2,7 +2,7 @@
 
 > A Wordpress REST API client for Laravel
 
-[![Travis](https://img.shields.io/travis/mauthi/wordpress-rest-api-client.svg?maxAge=2592000?style=flat-square)](https://travis-ci.org/mauthi/wordpress-rest-api-client)
+[![Travis](https://travis-ci.com/mauthi/wordpress-rest-api-client.svg?branch=master)](https://travis-ci.com/mauthi/wordpress-rest-api-client)
 
 For when you need to make [Wordpress REST API calls](http://v2.wp-api.org/) from
 some other Laravel PHP project, for some reason.
