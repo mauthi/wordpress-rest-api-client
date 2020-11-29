@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
 
     private function load()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/wordpressRestApi.php', 'wordpressRestApi');
+        $this->mergeConfigFrom(__DIR__.'/../config/wordpress.php', 'wordpress');
 
         return $this;
     }
@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     private function publish()
     {
         $this->publishes([
-            __DIR__.'/../config/wordpressRestApi.php' => config_path('wordpressRestApi'),
+            __DIR__.'/../config/wordpress.php' => config_path('wordpress'),
         ], 'config');
     }
 }
