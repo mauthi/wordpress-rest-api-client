@@ -78,7 +78,7 @@ class WpJWTAuth implements AuthInterface
         return $this->getTokenFromResponse($response);
     }
 
-    private function checkIfCredentialsAreSet() 
+    private function checkIfCredentialsAreSet()
     {
         if (!env("WP_REST_API_KEY") || !env('WP_REST_API_SECRET')) {
             throw new InvalidArgumentException('You need to set both WP_REST_API_KEY and WP_REST_API_SECRET in env');
