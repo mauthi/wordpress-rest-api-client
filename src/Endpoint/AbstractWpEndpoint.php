@@ -50,7 +50,8 @@ abstract class AbstractWpEndpoint
         return $this->getResponse($response, $id);
     }
 
-    public function getAll(array $params = []) : array {
+    public function getAll(array $params = []) : array
+    {
         $result = [];
 
         if (isset($params['page'])) {
@@ -110,8 +111,9 @@ abstract class AbstractWpEndpoint
     /**
      * @throws \RuntimeException
      */
-    private function getResponse(ResponseInterface $response, ?int $id) : array {
-         if (!$response->hasHeader('Content-Type')
+    private function getResponse(ResponseInterface $response, ?int $id) : array
+    {
+        if (!$response->hasHeader('Content-Type')
             || substr($response->getHeader('Content-Type')[0], 0, 16) !== 'application/json') {
             throw new RuntimeException('Unexpected response');
         }
