@@ -17,6 +17,8 @@ abstract class AbstractWpEndpoint
      */
     protected $client;
 
+    protected bool $withCredentials = true;
+
     /**
      * Users constructor.
      * @param WpClient $client
@@ -27,7 +29,7 @@ abstract class AbstractWpEndpoint
     }
 
     abstract protected function getEndpoint();
-
+    
     /**
      * @param int $id
      * @param array $params - parameters that can be passed to GET
@@ -38,8 +40,8 @@ abstract class AbstractWpEndpoint
     public function get($id = null, array $params = null)
     {
         $uri = $this->getEndpoint();
-        $uri .= (is_null($id)?'': '/' . $id);
-        $uri .= (is_null($params)?'': '?' . http_build_query($params));
+        $uri .= (is_null($id) ? '' : '/' . $id);
+        $uri .= (is_null($params) ? '' : '?' . http_build_query($params));
 
         $request = new Request('GET', $uri);
         $response = $this->client->send($request);
@@ -60,15 +62,15 @@ abstract class AbstractWpEndpoint
     public function save(array $data)
     {
         $url = $this->getEndpoint();
-
+        
         if (isset($data['id'])) {
             $url .= '/' . $data['id'];
             unset($data['id']);
         }
 
         $request = new Request('POST', $url, ['Content-Type' => 'application/json'], json_encode($data));
-        $response = $this->client->send($request);
-
+        dd($data);
+        $response = $this->client->send($request, $this->withCredentials);
         if ($response->hasHeader('Content-Type')
             && substr($response->getHeader('Content-Type')[0], 0, 16) === 'application/json') {
             return json_decode($response->getBody()->getContents(), true);

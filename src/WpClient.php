@@ -5,9 +5,11 @@ namespace Vnn\WpApiClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
+use InvalidArgumentException;
 use Vnn\WpApiClient\Auth\AuthInterface;
 use Vnn\WpApiClient\Endpoint;
 use Vnn\WpApiClient\Http\ClientInterface;
+use Vnn\WpApiClient\Http\GuzzleAdapter;
 
 /**
  * Class WpClient
@@ -47,12 +49,16 @@ class WpClient
 
     /**
      * WpClient constructor.
-     * @param ClientInterface $httpClient
-     * @param string $wordpressUrl
      */
-    public function __construct(ClientInterface $httpClient, $wordpressUrl = '')
+    public function __construct()
     {
-        $this->httpClient = $httpClient;
+        $wordpressUrl = env("WP_REST_API_URL");
+
+        if (!$wordpressUrl) {
+            throw new InvalidArgumentException('You need to set WP_REST_API_URL in env');
+        }
+
+        $this->httpClient = new GuzzleAdapter();
         $this->wordpressUrl = $wordpressUrl;
     }
 
@@ -95,9 +101,9 @@ class WpClient
      * @param RequestInterface $request
      * @return ResponseInterface
      */
-    public function send(RequestInterface $request)
+    public function send(RequestInterface $request, bool $withCredentials = true)
     {
-        if ($this->credentials) {
+        if ($this->credentials && true === $withCredentials) {
             $request = $this->credentials->addCredentials($request);
         }
 
