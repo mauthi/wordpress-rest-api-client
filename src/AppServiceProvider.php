@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
     private function publish()
     {
         $this->publishes([
-            __DIR__.'/../config/wordpress.php' => config_path('wordpress'),
+            __DIR__.'/../config/wordpress.php' => config_path('wordpress.php'),
         ], 'config');
     }
 }
