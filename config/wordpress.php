@@ -40,7 +40,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Custom post types
+    | Custom Post Types
     |--------------------------------------------------------------------------
     |
     | if you are using custom post types you can specify the api slugs here
@@ -48,6 +48,17 @@ return [
     */
 
     'customPostTypes' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Custom Taxonomies
+    |--------------------------------------------------------------------------
+    |
+    | if you are using custom taxonomies you can specify the api slugs here
+    |
+    */
+
+    'customTaxonomies' => [],
 
     /*
     |--------------------------------------------------------------------------

@@ -10,6 +10,7 @@ use Vnn\WpApiClient\Auth\AuthInterface;
 use Vnn\WpApiClient\Auth\WpJWTAuth;
 use Vnn\WpApiClient\Endpoint;
 use Vnn\WpApiClient\Endpoint\CustomPosts;
+use Vnn\WpApiClient\Endpoint\CustomTaxonomies;
 use Vnn\WpApiClient\Http\ClientInterface;
 use Vnn\WpApiClient\Http\GuzzleAdapter;
 
@@ -96,6 +97,10 @@ class WpClient
                 $this->endPoints[$endpoint] = new $class($this);
             } elseif (in_array($endpoint, config('wordpress.customPostTypes'))) {
                 $class = new CustomPosts($this);
+                $class->setSlug($endpoint);
+                $this->endPoints[$endpoint] = $class;
+            } elseif (in_array($endpoint, config('wordpress.customTaxonomies'))) {
+                $class = new CustomTaxonomies($this);
                 $class->setSlug($endpoint);
                 $this->endPoints[$endpoint] = $class;
             } else {

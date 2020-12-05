@@ -32,7 +32,7 @@ abstract class AbstractWpEndpoint
     }
 
     abstract protected function getEndpoint();
-    
+
     /**
      * @param int $id
      * @param array $params - parameters that can be passed to GET
@@ -48,6 +48,20 @@ abstract class AbstractWpEndpoint
         $response = $this->client->send($request);
 
         return $this->getResponse($response, $id);
+    }
+
+    public function delete(int $id, array $params = null) : void
+    {
+        $uri = $this->getEndpoint();
+        $uri .= '/' . $id;
+        $uri .= (is_null($params) ? '' : '?' . http_build_query($params));
+
+        $request = new Request('DELETE', $uri);
+        $response = $this->client->send($request);
+
+        if (isset($params['force']) && $params['force'] && !$this->getResponseKey($response, "deleted", false)) {
+            throw new RuntimeException("Delete not successfull for id {$id} / endpoint: {$this->getEndpoint()}");
+        }
     }
 
     public function getAll(array $params = []) : array
@@ -108,10 +122,17 @@ abstract class AbstractWpEndpoint
         return $this->save($data);
     }
 
+    public function update(int $id, array $data) : array
+    {
+        $data['id'] = $id;
+
+        return $this->save($data);
+    }
+
     /**
      * @throws \RuntimeException
      */
-    private function getResponse(ResponseInterface $response, ?int $id) : array
+    private function getResponse(ResponseInterface $response, ?int $id = null) : array
     {
         if (!$response->hasHeader('Content-Type')
             || substr($response->getHeader('Content-Type')[0], 0, 16) !== 'application/json') {
@@ -130,5 +151,27 @@ abstract class AbstractWpEndpoint
         }
 
         return $data;
+    }
+
+    /**
+     * @return bool|mixed
+     */
+    private function getResponseKey(ResponseInterface $response, string $key, bool $throwException = true, $defaultValue = false)
+    {
+        if (!$response->hasHeader('Content-Type')
+            || substr($response->getHeader('Content-Type')[0], 0, 16) !== 'application/json') {
+            throw new RuntimeException('Unexpected response');
+        }
+
+        $data = json_decode($response->getBody()->getContents(), true);
+
+        if (!isset($data[$key])) {
+            if ($throwException) {
+                throw new RuntimeException("Key {$key} not in response!");
+            }
+            return $defaultValue;
+        }
+
+        return $data[$key];
     }
 }
