@@ -156,7 +156,11 @@ abstract class AbstractWpEndpoint
     /**
      * @return bool|mixed
      */
-    private function getResponseKey(ResponseInterface $response, string $key, bool $throwException = true, $defaultValue = false)
+    private function getResponseKey(
+        ResponseInterface $response, 
+        string $key, 
+        bool $throwException = true, 
+        $defaultValue = false)
     {
         if (!$response->hasHeader('Content-Type')
             || substr($response->getHeader('Content-Type')[0], 0, 16) !== 'application/json') {
