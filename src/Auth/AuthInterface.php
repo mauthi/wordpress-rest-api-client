@@ -5,8 +5,7 @@ namespace Vnn\WpApiClient\Auth;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Interface AuthInterface
- * @package Vnn\WpApiClient\Auth
+ * Interface AuthInterface.
  */
 interface AuthInterface
 {

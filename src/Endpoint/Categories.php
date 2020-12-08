@@ -3,8 +3,7 @@
 namespace Vnn\WpApiClient\Endpoint;
 
 /**
- * Class Categories
- * @package Vnn\WpApiClient\Endpoint
+ * Class Categories.
  */
 class Categories extends AbstractWpEndpoint
 {

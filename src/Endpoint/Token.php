@@ -5,8 +5,7 @@ namespace Vnn\WpApiClient\Endpoint;
 use Vnn\WpApiClient\WpClient;
 
 /**
- * Class Users
- * @package Vnn\WpApiClient\Endpoint
+ * Class Users.
  */
 class Token extends AbstractWpEndpoint
 {

@@ -5,8 +5,7 @@ namespace Vnn\WpApiClient\Endpoint;
 use InvalidArgumentException;
 
 /**
- * Class Posts
- * @package Vnn\WpApiClient\Endpoint
+ * Class Posts.
  */
 abstract class AbstractCustomTypesEndpoint extends AbstractWpEndpoint
 {
@@ -23,7 +22,7 @@ abstract class AbstractCustomTypesEndpoint extends AbstractWpEndpoint
     protected function getEndpoint()
     {
         if (!$this->slug) {
-            throw new InvalidArgumentException("No slug set for CustomPosts class.");
+            throw new InvalidArgumentException('No slug set for CustomPosts class.');
         }
 
         return $this->slug;

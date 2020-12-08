@@ -34,7 +34,7 @@ return [
     | your api_key and secret (see https://github.com/WP-API/jwt-auth)
     |
     */
-    
+
     'key' => env('WP_REST_API_KEY'),
     'secret' => env('WP_REST_API_SECRET'),
 

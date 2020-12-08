@@ -7,8 +7,7 @@ use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * Class GuzzleAdapter
- * @package Vnn\Infrastructure\Http\Client
+ * Class GuzzleAdapter.
  */
 class GuzzleAdapter implements ClientInterface
 {

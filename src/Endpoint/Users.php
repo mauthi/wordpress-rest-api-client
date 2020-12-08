@@ -3,8 +3,7 @@
 namespace Vnn\WpApiClient\Endpoint;
 
 /**
- * Class Users
- * @package Vnn\WpApiClient\Endpoint
+ * Class Users.
  */
 class Users extends AbstractWpEndpoint
 {

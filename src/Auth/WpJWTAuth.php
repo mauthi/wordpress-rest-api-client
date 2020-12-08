@@ -9,8 +9,7 @@ use Vnn\WpApiClient\Auth\AbstractAuth;
 use Vnn\WpApiClient\WpClient;
 
 /**
- * Class WpJWTAuth
- * @package Vnn\WpApiClient\Auth
+ * Class WpJWTAuth.
  */
 class WpJWTAuth extends AbstractAuth implements AuthInterface
 {
@@ -24,7 +23,7 @@ class WpJWTAuth extends AbstractAuth implements AuthInterface
     {
         return $request->withHeader(
             'Authorization',
-            'Bearer ' . $this->getToken(),
+            'Bearer '.$this->getToken(),
         );
     }
 

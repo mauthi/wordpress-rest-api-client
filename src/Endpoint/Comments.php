@@ -3,8 +3,7 @@
 namespace Vnn\WpApiClient\Endpoint;
 
 /**
- * Class Comments
- * @package Vnn\WpApiClient\Endpoint
+ * Class Comments.
  */
 class Comments extends AbstractWpEndpoint
 {

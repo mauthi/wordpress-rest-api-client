@@ -3,8 +3,7 @@
 namespace Vnn\WpApiClient\Endpoint;
 
 /**
- * Class Tags
- * @package Vnn\WpApiClient\Endpoint
+ * Class Tags.
  */
 class Tags extends AbstractWpEndpoint
 {

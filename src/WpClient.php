@@ -15,8 +15,7 @@ use Vnn\WpApiClient\Http\ClientInterface;
 use Vnn\WpApiClient\Http\GuzzleAdapter;
 
 /**
- * Class WpClient
- * @package Vnn\WpApiClient
+ * Class WpClient.
  *
  * @method Endpoint\Categories categories()
  * @method Endpoint\Comments comments()
@@ -64,7 +63,7 @@ class WpClient
         $this->httpClient = new GuzzleAdapter();
         $this->wordpressUrl = $wordpressUrl;
 
-        $authClass = config("wordpress.authClass");
+        $authClass = config('wordpress.authClass');
         $this->setCredentials((new $authClass())->setClient($this));
     }
 
@@ -92,7 +91,7 @@ class WpClient
     public function __call($endpoint, array $args)
     {
         if (!isset($this->endPoints[$endpoint])) {
-            $class = 'Vnn\WpApiClient\Endpoint\\' . ucfirst($endpoint);
+            $class = 'Vnn\WpApiClient\Endpoint\\'.ucfirst($endpoint);
             if (class_exists($class)) {
                 $this->endPoints[$endpoint] = new $class($this);
             } elseif (in_array($endpoint, config('wordpress.customPostTypes'))) {
@@ -104,7 +103,7 @@ class WpClient
                 $class->setSlug($endpoint);
                 $this->endPoints[$endpoint] = $class;
             } else {
-                throw new RuntimeException('Endpoint "' . $endpoint . '" does not exist"');
+                throw new RuntimeException('Endpoint "'.$endpoint.'" does not exist"');
             }
         }
 
@@ -118,7 +117,7 @@ class WpClient
         }
 
         $request = $request->withUri(
-            $this->httpClient->makeUri($this->wordpressUrl . '/wp-json/wp/v2/' . $request->getUri())
+            $this->httpClient->makeUri($this->wordpressUrl.'/wp-json/wp/v2/'.$request->getUri())
         );
 
         return $this->httpClient->send($request);

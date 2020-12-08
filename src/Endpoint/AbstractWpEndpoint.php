@@ -8,8 +8,7 @@ use RuntimeException;
 use Vnn\WpApiClient\WpClient;
 
 /**
- * Class AbstractWpEndpoint
- * @package Vnn\WpApiClient\Endpoint
+ * Class AbstractWpEndpoint.
  */
 abstract class AbstractWpEndpoint
 {
@@ -41,8 +40,8 @@ abstract class AbstractWpEndpoint
     public function get(?int $id = null, array $params = null) : array
     {
         $uri = $this->getEndpoint();
-        $uri .= (is_null($id) ? '' : '/' . $id);
-        $uri .= (is_null($params) ? '' : '?' . http_build_query($params));
+        $uri .= (is_null($id) ? '' : '/'.$id);
+        $uri .= (is_null($params) ? '' : '?'.http_build_query($params));
 
         $request = new Request('GET', $uri);
         $response = $this->client->send($request);
@@ -53,13 +52,13 @@ abstract class AbstractWpEndpoint
     public function delete(int $id, array $params = null) : void
     {
         $uri = $this->getEndpoint();
-        $uri .= '/' . $id;
-        $uri .= (is_null($params) ? '' : '?' . http_build_query($params));
+        $uri .= '/'.$id;
+        $uri .= (is_null($params) ? '' : '?'.http_build_query($params));
 
         $request = new Request('DELETE', $uri);
         $response = $this->client->send($request);
 
-        if (isset($params['force']) && $params['force'] && !$this->getResponseKey($response, "deleted", false)) {
+        if (isset($params['force']) && $params['force'] && !$this->getResponseKey($response, 'deleted', false)) {
             throw new RuntimeException("Delete not successfull for id {$id} / endpoint: {$this->getEndpoint()}");
         }
     }
@@ -100,16 +99,17 @@ abstract class AbstractWpEndpoint
 
         if (isset($data['id'])) {
             $id = $id;
-            $url .= '/' . $data['id'];
+            $url .= '/'.$data['id'];
             unset($data['id']);
         }
 
         $json = json_encode($data);
         $request = new Request('POST', $url, [
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ], $json);
 
         $response = $this->client->send($request, $this->withCredentials);
+
         return $this->getResponse($response, $id);
     }
 
@@ -173,6 +173,7 @@ abstract class AbstractWpEndpoint
             if ($throwException) {
                 throw new RuntimeException("Key {$key} not in response!");
             }
+
             return $defaultValue;
         }
 

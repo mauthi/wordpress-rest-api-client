@@ -6,8 +6,7 @@ use GuzzleHttp\Psr7\Request;
 use RuntimeException;
 
 /**
- * Class Media
- * @package Vnn\WpApiClient\Endpoint
+ * Class Media.
  */
 class Media extends AbstractWpEndpoint
 {
@@ -31,12 +30,12 @@ class Media extends AbstractWpEndpoint
         $url = $this->getEndpoint();
 
         if (isset($data['id'])) {
-            $url .= '/' . $data['id'];
+            $url .= '/'.$data['id'];
             unset($data['id']);
         }
 
         $fileName = basename($filePath);
-        $fileHandle = fopen($filePath, "r");
+        $fileHandle = fopen($filePath, 'r');
 
         if ($fileHandle !== false) {
             if (!$mimeType) {
@@ -48,7 +47,7 @@ class Media extends AbstractWpEndpoint
                 $url,
                 [
                     'Content-Type' => $mimeType,
-                    'Content-Disposition' => 'attachment; filename="'.$fileName.'"'
+                    'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
                 ],
                 $fileHandle
             );

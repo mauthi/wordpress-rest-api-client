@@ -3,8 +3,7 @@
 namespace Vnn\WpApiClient\Endpoint;
 
 /**
- * Class Posts
- * @package Vnn\WpApiClient\Endpoint
+ * Class Posts.
  */
 class Posts extends AbstractWpEndpoint
 {

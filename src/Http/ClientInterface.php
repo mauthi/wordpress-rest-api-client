@@ -7,8 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 
 /**
- * Interface ClientInterface
- * @package Vnn\WpApiClient\Http
+ * Interface ClientInterface.
  */
 interface ClientInterface
 {

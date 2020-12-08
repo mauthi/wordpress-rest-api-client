@@ -5,8 +5,7 @@ namespace Vnn\WpApiClient\Endpoint;
 use InvalidArgumentException;
 
 /**
- * Class Posts
- * @package Vnn\WpApiClient\Endpoint
+ * Class Posts.
  */
 class CustomTaxonomies extends AbstractCustomTypesEndpoint
 {
